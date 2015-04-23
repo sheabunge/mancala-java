@@ -177,7 +177,7 @@ class MancalaGame extends JPanel implements MouseListener {
 	}
 
 	/**
-	 * Check if a player has one the game
+	 * Check if a player has won the game
 	 */
 	public void checkForWin() {
 		boolean topRowEmpty = true, bottomRowEmpty = true;
