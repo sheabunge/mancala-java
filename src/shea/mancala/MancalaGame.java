@@ -43,7 +43,7 @@ class MancalaGame extends JPanel implements MouseListener {
 	/**
 	 * Retrieve the player who is currently having a turn
 	 * @return the current player number
-	 * @throws RuntimeException
+	 * @throws RuntimeException if the player does not have a valid number
 	 */
 	public int getCurrentPlayer() throws RuntimeException {
 		if ( currentPlayer != 1 && currentPlayer != 2 ) {

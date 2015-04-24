@@ -14,11 +14,8 @@ public class Main {
 	 * @param args arguments passed to the program
 	 */
 	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				createAndShowGUI();
-			}
+		SwingUtilities.invokeLater( () -> {
+			createAndShowGUI();
 		});
 	}
 
