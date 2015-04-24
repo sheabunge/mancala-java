@@ -7,6 +7,7 @@ import java.awt.Graphics;
 /**
  * Draw a Mancala board
  * @author Shea Bunge
+ * @version 1.0
  */
 class Board {
 

@@ -6,6 +6,7 @@ import javax.swing.SwingUtilities;
 /**
  * Set up the GUI
  * @author Shea Bunge
+ * @version 1.0
  */
 public class Main {
 

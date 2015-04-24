@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 /**
  * This class handles all game operations
  * @author Shea Bunge
+ * @version 1.0
  */
 @SuppressWarnings("serial")
 class MancalaGame extends JPanel implements MouseListener {
