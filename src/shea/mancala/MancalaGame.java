@@ -17,9 +17,32 @@ import javax.swing.JPanel;
 @SuppressWarnings("serial")
 class MancalaGame extends JPanel implements MouseListener {
 
-	private Board board;
+	/**
+	 * Holds an instance of the Board class
+	 */
+	final Board board;
+
+	/**
+	 * Defines the amount of stones in the pits
+	 */
 	private int[] pitStones = new int[] { 4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0 };
-	private int currentPlayer = 1, winningPlayer = -1;
+
+	/**
+	 * The player currently having a turn.
+	 * Cannot be any number besides 1 or 2
+	 */
+	private int currentPlayer = 1;
+
+	/**
+	 * Determines when the game is won and who by
+	 *
+	 * Valid values:
+	 * -1 = game has not ended
+	 *  0 = game ended in tie
+	 *  1 = player 1 won
+	 *  2 = player 2 won
+	 */
+	private int winningPlayer = -1;
 
 	/**
 	 * Initialize the class
@@ -114,8 +137,11 @@ class MancalaGame extends JPanel implements MouseListener {
 	 * Begin the other player's turn
 	 */
 	public void switchTurn() {
+
+		// Change the active player
 		currentPlayer = getOtherPlayer();
 
+		// Reverse the pit positions
 		int[] newStones = new int[14];
 		System.arraycopy(pitStones, 7, newStones, 0, 7);
 		System.arraycopy(pitStones, 0, newStones, 7, 7);
@@ -148,6 +174,23 @@ class MancalaGame extends JPanel implements MouseListener {
 	}
 
 	/**
+	 * Paint information on the current player
+	 * @param g Graphics object
+	 */
+	protected void paintPlayerInfo(Graphics g) {
+
+		if ( winningPlayer < 0 ) {
+			g.drawString("Player " + getCurrentPlayer() + "'s turn", 20, 20);
+		} else {
+			if (winningPlayer == 0) {
+				g.drawString("Draw!", 20, 20);
+			} else {
+				g.drawString("Player " + winningPlayer + " wins!", 20, 20);
+			}
+		}
+	}
+
+	/**
 	 * Draw the board and stones on the screen
 	 * @param g frame Graphics object
 	 */
@@ -162,17 +205,7 @@ class MancalaGame extends JPanel implements MouseListener {
 		drawStones(g);
 
 		g.setColor(Color.black);
-
-		// check for win
-		if ( winningPlayer < 0 ) {
-			g.drawString("Player " + getCurrentPlayer() + "'s turn", 20, 20);
-		} else {
-			if (winningPlayer == 0) {
-				g.drawString("Draw!", 20, 20);
-			} else {
-				g.drawString("Player " + winningPlayer + " wins!", 20, 20);
-			}
-		}
+		paintPlayerInfo(g);
 
 	}
 
@@ -182,7 +215,7 @@ class MancalaGame extends JPanel implements MouseListener {
 	public void checkForWin() {
 		boolean topRowEmpty = true, bottomRowEmpty = true;
 
-		// Check if the entire row is empty
+		// Check if the bottom row contains any stones
 		for (int i = 0; i < 6; ++i) {
 			if (pitStones[i] > 0) {
 				bottomRowEmpty = false;
@@ -190,6 +223,7 @@ class MancalaGame extends JPanel implements MouseListener {
 			}
 		}
 
+		// Check if the top row contains any stones
 		for (int i = 7; i < 13; ++i) {
 			if (pitStones[i] > 0) {
 				topRowEmpty = false;
@@ -197,6 +231,7 @@ class MancalaGame extends JPanel implements MouseListener {
 			}
 		}
 
+		// Take the stones from the non-empty row and add them to that player's store
 		if (topRowEmpty || bottomRowEmpty) {
 			if (topRowEmpty && ! bottomRowEmpty) {
 				for (int i = 0; i < 6; ++i) {
@@ -210,6 +245,7 @@ class MancalaGame extends JPanel implements MouseListener {
 				}
 			}
 
+			// Determine which player holds the most stones
 			if (pitStones[6] > pitStones[13] ) {
 				winningPlayer = getCurrentPlayer();
 			} else if (pitStones[6] < pitStones[13]) {
@@ -229,8 +265,11 @@ class MancalaGame extends JPanel implements MouseListener {
 	 * @param pit the pit selected by the player
 	 */
 	public void doPlayerTurn(int pit) {
+
+		// perform the player's action
 		boolean	result = moveStones(pit);
 
+		// make sure that a player hasn't run out of stones
 		checkForWin();
 
 		// change the player if the current turn is ended
@@ -249,10 +288,12 @@ class MancalaGame extends JPanel implements MouseListener {
 		int mx = e.getX();
 		int my = e.getY();
 
+		// loop through all pits in the bottom row
 		for (int pit = 0; pit < 6; ++pit) {
 			x = board.getPitX(pit);
 			y = board.getPitY(pit);
 
+			// check if the click was inside the pit area.
 			if ( mx > x && mx < x + board.pitWidth && my > y && my < y + board.pitHeight )  {
 				doPlayerTurn(pit);
 			}
@@ -263,5 +304,4 @@ class MancalaGame extends JPanel implements MouseListener {
 	@Override public void mouseExited(MouseEvent e) {}
 	@Override public void mousePressed(MouseEvent e) {}
 	@Override public void mouseReleased(MouseEvent e) {}
-
 }
